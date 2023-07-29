@@ -4,6 +4,8 @@ import time
 from collections import defaultdict
 from scapy.all import sniff, IP, TCP
 
+
+#Sets max allowed packet transfer speed:
 THRESHOLD = 40
 print(f"THRESHOLD: {THRESHOLD}")
 
@@ -15,6 +17,7 @@ def read_ip_file(filename):
 
 # Check for Nimda worm signature
 def is_nimda_worm(packet):
+    # Checks for TCP layer and port no.80
     if packet.haslayer(TCP) and packet[TCP].dport == 80:
         payload = packet[TCP].payload
         return "GET /scripts/root.exe" in str(payload)
@@ -29,7 +32,7 @@ def log_event(message):
     
     with open(log_file, "a") as file:
         file.write(f"{message}\n")
-
+#Processes argument 'packet' in accordance with firewall rules
 def packet_callback(packet):
     src_ip = packet[IP].src
 
@@ -39,6 +42,7 @@ def packet_callback(packet):
 
     # Check if IP is in the blacklist
     if src_ip in blacklist_ips:
+    # Blocks IP if it is in the blacklist
         os.system(f"iptables -A INPUT -s {src_ip} -j DROP")
         log_event(f"Blocking blacklisted IP: {src_ip}")
         return
@@ -52,9 +56,11 @@ def packet_callback(packet):
 
     packet_count[src_ip] += 1
 
+    #Tells the time
     current_time = time.time()
     time_interval = current_time - start_time[0]
 
+    # Runs every 1 second
     if time_interval >= 1:
         for ip, count in packet_count.items():
             packet_rate = count / time_interval
@@ -66,8 +72,9 @@ def packet_callback(packet):
                 blocked_ips.add(ip)
 
         packet_count.clear()
+        #Restarts start time
         start_time[0] = current_time
-
+# Main Guard
 if __name__ == "__main__":
     if os.geteuid() != 0:
         print("This script requires root privileges.")
@@ -79,7 +86,9 @@ if __name__ == "__main__":
 
     packet_count = defaultdict(int)
     start_time = [time.time()]
+    #Stores blocked IPs
     blocked_ips = set()
 
     print("Monitoring network traffic...")
+    # Sniffs each IP packet
     sniff(filter="ip", prn=packet_callback)
