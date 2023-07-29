@@ -10,3 +10,8 @@ Email: moi@faanross.com
 
 ** Constructive critique ALWAYS welcome **
 |in sterquiliniis invenitur|
+
+
+7/29/2023 - Blair Dilbeck - Adding functionality to basic firewall project. 
+* Current goal: Give firewall the ability to send emails to user when an IP is blocked.
+
