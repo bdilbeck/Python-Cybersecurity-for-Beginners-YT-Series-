@@ -9,10 +9,8 @@ import ssl
 import smtplib
 
 sender = ''
-sender_password = ''
+sender_password = password
 reciever = ''
-
-subject = ''
 
 #Sets max allowed packet transfer speed:
 THRESHOLD = 40
@@ -66,6 +64,7 @@ def packet_callback(packet):
         log_event(f"Blocking Nimda source IP: {src_ip}")
         subject =(f"Nimda Worm Detected") 
         body=(f"Nimda worm packet detected. Source IP ({src_ip}) blocked.")
+        # Email Message code based on tutorial based on Youtuber 'Code with Tomi'
         email = EmailMessage()
         email['From'] = sender
         email['To'] = reciever
@@ -74,7 +73,7 @@ def packet_callback(packet):
 
         context = ssl.create_default_context()
 
-        with smtplib.SMTP_SSL('smtp.gmail.com',465, context=context) as smtp:
+        with smtplib.SMTP_SSL('smtp.proton.me',465, context=context) as smtp:
             smtp.login(sender, sender_password)
             smtp.sendmail(sender, reciever, email.as_string())
 
