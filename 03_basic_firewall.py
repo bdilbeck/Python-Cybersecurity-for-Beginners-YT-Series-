@@ -65,7 +65,7 @@ def packet_callback(packet):
         log_event(f"Blocking Nimda source IP: {src_ip}")
 
         # Combined with script by GitHub user "thepycoach" that allows users to send emails via Python.
-        # By adding this code, the script can now send an email to a specified recipiant to inform them of a Nimda Worm attack
+        # By adding this code, the script can now send an email to a specified recipient to inform them of a Nimda Worm attack
         
         # Defines the subject & content of the Email alert
         subject = 'Nimda Worm Alert!'
