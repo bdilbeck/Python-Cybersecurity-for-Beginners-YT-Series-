@@ -13,5 +13,8 @@ Email: moi@faanross.com
 
 
 7/29/2023 - Blair Dilbeck - Adding functionality to basic firewall project. 
-* Current goal: Give firewall the ability to send emails to user when an IP is blocked.
+* Current goal: Give the firewall the ability to send emails to a user when an IP is blocked.
+
+8/5/2023 - Blair Dilbeck - The firewall script is now capable of sending emails to a specified user to alert them when a Nimda Worm packet is detected.
+* New Goal: Create a visual interface for the firewall script via Flask.
 
