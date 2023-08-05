@@ -4,13 +4,14 @@ import time
 from collections import defaultdict
 from scapy.all import sniff, IP, TCP
 from email.message import EmailMessage
-from app2 import password
 import ssl
 import smtplib
 
+
 sender = ''
-sender_password = password
-reciever = ''
+#To set a custom gmail password that python can access, go to "App Passwords" in Google account settings, and select a custom named app named "Python"
+sender_password = ''
+receiver = ''
 
 #Sets max allowed packet transfer speed:
 THRESHOLD = 40
@@ -62,20 +63,31 @@ def packet_callback(packet):
         print(f"Blocking Nimda source IP: {src_ip}")
         os.system(f"iptables -A INPUT -s {src_ip} -j DROP")
         log_event(f"Blocking Nimda source IP: {src_ip}")
-        subject =(f"Nimda Worm Detected") 
-        body=(f"Nimda worm packet detected. Source IP ({src_ip}) blocked.")
-        # Email Message code based on tutorial based on Youtuber 'Code with Tomi'
+
+        # Combined with script by GitHub user "thepycoach" that allows users to send emails via Python.
+        # By adding this code, the script can now send an email to a specified recipiant to inform them of a Nimda Worm attack
+        
+        # Defines the subject & content of the Email alert
+        subject = 'Nimda Worm Alert!'
+        body = (f"""
+        A Nimda worm packet has been detected by the firewall. The Source IP ({src_ip}) has been blocked.
+        """)
+
+
+        #Defining the message, author, receiver, subject, and body
         email = EmailMessage()
         email['From'] = sender
-        email['To'] = reciever
+        email['To'] = receiver
         email['Subject'] = subject
         email.set_content(body)
 
+        # Adds SSL, which provides encryption, data integrity, and authentication
         context = ssl.create_default_context()
 
-        with smtplib.SMTP_SSL('smtp.proton.me',465, context=context) as smtp:
+        # Logs in using Google SMTP server and the SMTP port no. 465, sending the email
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
             smtp.login(sender, sender_password)
-            smtp.sendmail(sender, reciever, email.as_string())
+            smtp.sendmail(sender, receiver, email.as_string())
 
 
         return
