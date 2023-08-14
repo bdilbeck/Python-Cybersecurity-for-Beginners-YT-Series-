@@ -18,3 +18,5 @@ Email: moi@faanross.com
 8/5/2023 - Blair Dilbeck - The firewall script is now capable of sending emails to a specified user to alert them when a Nimda Worm packet is detected.
 * New Goal: Create a visual interface for the firewall script via Flask.
 
+8/14/2023 - Blair Dilbeck - The firewall script can now connect to the Flask app on app.py but the information transfer is not yet dynamic on either end.
+
