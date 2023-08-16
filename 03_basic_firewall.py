@@ -15,10 +15,10 @@ blocked_ips = set()
 
 def firewall():
     print(blocked_ips)
-    sender = 'b4204411@gmail.com'
+    sender = ''
     #To set a custom gmail password that python can access, go to "App Passwords" in Google account settings, and select a custom named app named "Python"
-    sender_password = 'raywfcumfoyxfcuh'
-    receiver = 'blairdb747@gmail.com'
+    sender_password = ''
+    receiver = ''
 
     #Sets max allowed packet transfer speed:
     THRESHOLD = 40
