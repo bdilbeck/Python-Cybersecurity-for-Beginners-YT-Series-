@@ -20,3 +20,9 @@ Email: moi@faanross.com
 
 8/14/2023 - Blair Dilbeck - The firewall script can now connect to the Flask app on app.py but the information transfer is not yet dynamic on either end.
 
+9/4/2023 - Blair Dilbeck - The firewall script is now capable of sending blocked IPs to a text file called blacklist.txt, and those blocked IPs are displayed on interface.html powered by the Flask app. The page can be updated in real time as the script runs by refreshing the page.
+
+Development will now focus on improving the interface and working out issues with the script and txt file.
+
+*Ongoing issues:
+- The script sometimes puts the same address in the txt file multiple times.
