@@ -1,3 +1,29 @@
-<h1>Hello World! This is the Firewall Interface!</h1>
-<h2>Blocked IPs: </h2>
-<h2>{{info}}</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+
+</head>
+<body>
+    <h1>Blocked IP Addresses</h1>
+    <table>
+        <thread>
+            <tr>
+                <th>#</th>
+                <th>IP Address</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% for line in content.split('\n') %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{line}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</body>
+
+</html>
