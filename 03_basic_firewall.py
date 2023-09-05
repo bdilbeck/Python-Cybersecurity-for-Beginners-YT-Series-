@@ -6,15 +6,11 @@ from scapy.all import sniff, IP, TCP
 from email.message import EmailMessage
 import ssl
 import smtplib
-import time
-#from threading import Thread
-#Just in case we need it ;)
 
-#This set only shows up on Flask Webpage when it is outside the firewall function
-blocked_ips = set()
+blocked_ips = []
 
 def firewall():
-    print(blocked_ips)
+    global blocked_ips
     sender = ''
     #To set a custom gmail password that python can access, go to "App Passwords" in Google account settings, and select a custom named app named "Python"
     sender_password = ''
@@ -71,7 +67,10 @@ def firewall():
             print(f"Blocking Nimda source IP: {src_ip}")
             os.system(f"iptables -A INPUT -s {src_ip} -j DROP")
             log_event(f"Blocking Nimda source IP: {src_ip}")
-
+            # Adds blocked IPs to the blacklist txt file.
+            block = open("blacklist.txt","a")
+            block.write(f"{src_ip}\n")
+            block.close()
             # Combined with script by GitHub user "thepycoach" that allows users to send emails via Python.
             # By adding this code, the script can now send an email to a specified recipiant to inform them of a Nimda Worm attack
             
@@ -114,10 +113,15 @@ def firewall():
                     print(f"Blocking IP: {ip}, packet rate: {packet_rate}")
                     os.system(f"iptables -A INPUT -s {ip} -j DROP")
                     log_event(f"Blocking IP: {ip}, packet rate: {packet_rate}")
-                    blocked_ips.add(ip)
+                    blocked_ips.append(ip)
+                    # Adds blocked IPs to the blacklist txt file.
+                    block = open("blacklist.txt","a")
+                    block.write(f"{src_ip}\n")
+                    block.close()      
 
             packet_count.clear()
             start_time[0] = current_time
+            
     #"Main Guard" function
     if __name__ == "__main__":
         if os.geteuid() != 0:
@@ -128,13 +132,13 @@ def firewall():
         # Import whitelist and blacklist IPs
         whitelist_ips = read_ip_file("whitelist.txt")
         blacklist_ips = read_ip_file("blacklist.txt")
-
         packet_count = defaultdict(int)
         start_time = [time.time()]
-        #Set()
+        #blocked_ips
 
         print("Monitoring network traffic...")
         #Sniffs IP protocol packets only
         sniff(filter="ip", prn=packet_callback)
-        
+        return blocked_ips
+
 firewall()
