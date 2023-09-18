@@ -25,4 +25,6 @@ Email: moi@faanross.com
 Development will now focus on improving the interface and working out issues with the script and txt file.
 
 *Ongoing issues:
-- The script sometimes puts the same address in the txt file multiple times.
+- ~The script sometimes puts the same address in the txt file multiple times.~ (Resolved)
+
+9/18/2023 - Blair Dilbeck - The script no longer encounters the error of entering duplicate IPs into the blacklist. Attention will now be focused on improving the webpage interface.
