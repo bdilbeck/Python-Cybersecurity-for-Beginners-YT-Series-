@@ -17,7 +17,7 @@ def firewall():
     receiver = ''
 
     #Sets max allowed packet transfer speed:
-    THRESHOLD = 40
+    THRESHOLD = 1
     print(f"THRESHOLD: {THRESHOLD}")
 
     # Read IPs from a file
@@ -64,12 +64,12 @@ def firewall():
         
         # Check for Nimda worm signature
         if is_nimda_worm(packet):
-            print(f"Blocking Nimda source IP: {src_ip}")
-            os.system(f"iptables -A INPUT -s {src_ip} -j DROP")
-            log_event(f"Blocking Nimda source IP: {src_ip}")
+            print(f"Blocking Nimda source IP: {ip}")
+            os.system(f"iptables -A INPUT -s {ip} -j DROP")
+            log_event(f"Blocking Nimda source IP: {ip}")
             # Adds blocked IPs to the blacklist txt file.
             block = open("blacklist.txt","a")
-            block.write(f"{src_ip}\n")
+            block.write(f"{ip}\n")
             block.close()
             # Combined with script by GitHub user "thepycoach" that allows users to send emails via Python.
             # By adding this code, the script can now send an email to a specified recipiant to inform them of a Nimda Worm attack
@@ -115,9 +115,12 @@ def firewall():
                     log_event(f"Blocking IP: {ip}, packet rate: {packet_rate}")
                     blocked_ips.append(ip)
                     # Adds blocked IPs to the blacklist txt file.
-                    block = open("blacklist.txt","a")
-                    block.write(f"{src_ip}\n")
-                    block.close()      
+                    with open ("blacklist.txt", "r") as file:
+                        content = file.read()
+                        if ip not in content:
+                            block = open("blacklist.txt","a")
+                            block.write(f"{ip}\n")
+                            block.close()      
 
             packet_count.clear()
             start_time[0] = current_time
@@ -142,3 +145,4 @@ def firewall():
         return blocked_ips
 
 firewall()
+
